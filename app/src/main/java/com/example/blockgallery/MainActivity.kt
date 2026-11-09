@@ -61,12 +61,16 @@ class MainActivity : ComponentActivity() {
 }
 
 // Add this custom transparent indication object at the bottom of MainActivity.kt
-private object NoOpIndication : androidx.compose.foundation.IndicationNodeFactory {
+val NoOpIndication = object : androidx.compose.foundation.IndicationNodeFactory {
     override fun create(
         interactionSource: androidx.compose.foundation.interaction.InteractionSource
     ): androidx.compose.ui.node.DelegatableNode {
         return NoOpIndicationNode()
     }
+
+    // Anonymous objects allow us to override equals and hashCode
+    override fun equals(other: Any?): Boolean = other === this
+    override fun hashCode(): Int = -1
 }
 
 private class NoOpIndicationNode : androidx.compose.ui.Modifier.Node(), androidx.compose.ui.node.DrawModifierNode {
