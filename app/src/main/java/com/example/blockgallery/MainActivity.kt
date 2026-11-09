@@ -61,20 +61,20 @@ class MainActivity : ComponentActivity() {
 }
 
 // Add this custom transparent indication object at the bottom of MainActivity.kt
-private object NoOpIndication : androidx.compose.foundation.Indication {
-    private object NoOpIndicationInstance : androidx.compose.foundation.IndicationInstance {
-        override fun androidx.compose.ui.graphics.drawscope.ContentDrawScope.drawIndication() {
-            drawContent()
-        }
-    }
-
-    @androidx.compose.runtime.Composable
-    override fun rememberUpdatedInstance(
+private object NoOpIndication : androidx.compose.foundation.IndicationNodeFactory {
+    override fun create(
         interactionSource: androidx.compose.foundation.interaction.InteractionSource
-    ): androidx.compose.foundation.IndicationInstance {
-        return NoOpIndicationInstance
+    ): androidx.compose.ui.node.DelegatableNode {
+        return NoOpIndicationNode()
     }
 }
+
+private class NoOpIndicationNode : androidx.compose.ui.Modifier.Node(), androidx.compose.ui.node.DrawModifierNode {
+    override fun androidx.compose.ui.graphics.drawscope.ContentDrawScope.draw() {
+        drawContent() // Draws the content without any ripple overlay
+    }
+}
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
