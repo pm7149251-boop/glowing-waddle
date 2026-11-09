@@ -53,10 +53,26 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             // Disable default Android ripple/tap flash across the app
-            CompositionLocalProvider(LocalIndication provides null) {
+            CompositionLocalProvider(LocalIndication provides NoOpIndication) {
                 BlenderGalleryApp()
             }
         }
+    }
+}
+
+// Add this custom transparent indication object at the bottom of MainActivity.kt
+private object NoOpIndication : androidx.compose.foundation.Indication {
+    private object NoOpIndicationInstance : androidx.compose.foundation.IndicationInstance {
+        override fun androidx.compose.ui.graphics.drawscope.ContentDrawScope.drawIndication() {
+            drawContent()
+        }
+    }
+
+    @androidx.compose.runtime.Composable
+    override fun rememberUpdatedInstance(
+        interactionSource: androidx.compose.foundation.interaction.InteractionSource
+    ): androidx.compose.foundation.IndicationInstance {
+        return NoOpIndicationInstance
     }
 }
 
